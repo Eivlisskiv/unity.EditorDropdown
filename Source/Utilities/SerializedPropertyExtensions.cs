@@ -46,7 +46,7 @@ namespace IgnitedBox.EditorDropdown.Utilities
             if (path == null) return mono;
 
             return ReflectionExtension.GetValueFromPath
-                (path, field, mono).Item2;
+                (path, field, mono).target;
         }
     }
 }

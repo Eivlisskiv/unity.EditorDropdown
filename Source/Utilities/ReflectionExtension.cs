@@ -5,13 +5,19 @@ namespace IgnitedBox.EditorDropdown.Utilities
 {
     public static class ReflectionExtension
     {
+        internal struct SearchResult
+        {
+            internal MemberInfo member;
+            internal object target;
+        }
+
         /// <summary>
         /// Get the member info and value of a member from a path starting at a static member.
         /// </summary>
         /// <param name="path">The path to follow.</param>
         /// <param name="type">The type in which the initial static member is located.</param>
         /// <returns>The MemberInfo and value at the end of the path.</returns>
-        internal static (MemberInfo, object) GetValueFromPath(string path, Type type)
+        internal static SearchResult GetValueFromPath(string path, Type type)
         {
             string[] paths = path.Split('.');
             TryGetMember(type, paths[0], out MemberInfo info);
@@ -26,33 +32,33 @@ namespace IgnitedBox.EditorDropdown.Utilities
         /// <param name="member">The MemberInfo of the starting instance</param>
         /// <param name="instance">The instance from which to start the path</param>
         /// <returns>The MemberInfo and value at the end of the path.</returns>
-        internal static (MemberInfo, object) GetValueFromPath(string path, MemberInfo member, object instance)
+        internal static SearchResult GetValueFromPath(string path, MemberInfo member, object instance)
         {
             string[] paths = path.Split('.');
 
             return GetInners(member, instance, paths, 0);
         }
 
-        private static (MemberInfo, object) GetInners(MemberInfo member, object instance, string[] path, int depth)
+        private static SearchResult GetInners(MemberInfo member, object instance, string[] path, int depth)
         {
             if (depth < path.Length)
             {
-                (MemberInfo info, object value) = GetInner(instance, path[depth]);
-                return GetInners(info, value, path, depth + 1); 
+                SearchResult result = GetInner(instance, path[depth]);
+                return GetInners(result.member, result.target, path, depth + 1); 
             }
 
-            return (member, instance);
+            return new SearchResult { member = member, target = instance };
         }
 
-        private static (MemberInfo, object) GetInner(object instance, string variable)
+        private static SearchResult GetInner(object instance, string variable)
         {
             Type type = instance.GetType();
 
             if (TryGetMember(type, variable, out MemberInfo member)
                 && TryGetValue(member, instance, out object value))
-                return (member, value);
+                return new SearchResult { member = member, target = value };
 
-            return (null, null);
+            return new SearchResult { };
         }
 
         public static bool TryGetValue(this MemberInfo member, object instance, out object value)

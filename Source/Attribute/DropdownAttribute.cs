@@ -93,10 +93,10 @@ namespace IgnitedBox.EditorDropdown.Attribute
         private bool LoadList()
         {
             if (type != null && ParseList(ReflectionExtension
-                .GetValueFromPath(path, type: type).Item2)) return true;
+                .GetValueFromPath(path, type: type).target)) return true;
 
             if (ParseList(ReflectionExtension
-                .GetValueFromPath(path, null, TargetObject).Item2)) return true;
+                .GetValueFromPath(path, null, TargetObject).target)) return true;
 
             return false;
         }
