@@ -11,7 +11,7 @@ namespace IgnitedBox.EditorDropdown.Utilities
         /// <param name="path">The path to follow.</param>
         /// <param name="type">The type in which the initial static member is located.</param>
         /// <returns>The MemberInfo and value at the end of the path.</returns>
-        public static (MemberInfo, object) GetValueFromPath(string path, Type type)
+        internal static (MemberInfo, object) GetValueFromPath(string path, Type type)
         {
             string[] paths = path.Split('.');
             TryGetMember(type, paths[0], out MemberInfo info);
@@ -26,7 +26,7 @@ namespace IgnitedBox.EditorDropdown.Utilities
         /// <param name="member">The MemberInfo of the starting instance</param>
         /// <param name="instance">The instance from which to start the path</param>
         /// <returns>The MemberInfo and value at the end of the path.</returns>
-        public static (MemberInfo, object) GetValueFromPath(string path, MemberInfo member, object instance)
+        internal static (MemberInfo, object) GetValueFromPath(string path, MemberInfo member, object instance)
         {
             string[] paths = path.Split('.');
 
