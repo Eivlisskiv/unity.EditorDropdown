@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using IgnitedBox.EditorDropdown.Utilities;
+﻿using IgnitedBox.EditorDropdown.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -44,7 +43,7 @@ namespace IgnitedBox.EditorDropdown.Attribute
                 _attribute.SetValue(0, index);
                 selected = _attribute.Index[index];
             }
-
+            
             int nindex = EditorGUI.Popup(position, prop.displayName,
                 selected, _attribute.Options);
 
@@ -53,4 +52,3 @@ namespace IgnitedBox.EditorDropdown.Attribute
         }
     }
 }
-#endif
