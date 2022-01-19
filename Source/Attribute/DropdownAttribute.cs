@@ -116,15 +116,17 @@ namespace IgnitedBox.EditorDropdown.Attribute
         /// <returns></returns>
         protected virtual string GetName(object o)
         {
+            if (o == null) return "null";
+
             if (o is string str) return str.Replace('_', ' ');
 
             if (o is Type t) return t.Name.Replace('_', ' ');
 
-            if (o is UnityEngine.Object unityObj) return unityObj.name;
-
-            Type otype = o.GetType();
-            if (otype.IsClass && !otype.IsPrimitive) return otype.Name.Replace('_', ' ');
-
+            if (o is UnityEngine.Object unityObj)
+            {
+                if (!unityObj) return "undefined";
+                return unityObj.name;
+            }
             return o.ToString();
         }
 
@@ -270,6 +272,10 @@ namespace IgnitedBox.EditorDropdown.Attribute
 
             return false;
         }
+
+        public object GetSelected()
+            => FieldInfo.GetValue(TargetObject);
+
 
         public object Parse(int index)
             => Parse(items[index]);

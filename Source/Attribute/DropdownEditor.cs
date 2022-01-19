@@ -9,6 +9,8 @@ namespace IgnitedBox.EditorDropdown.Attribute
     {
         private DropdownAttribute _attribute;
 
+        private Editor customEditor;
+
         public DropdownEditor() : base()
         {
             _attribute = (DropdownAttribute)attribute;
@@ -55,7 +57,27 @@ namespace IgnitedBox.EditorDropdown.Attribute
                 selected, _attribute.Options);
 
             if (_attribute.SetValue(nindex, index))
-                EditorUtility.SetDirty(prop.serializedObject.targetObject);
+            {
+                EditorUtility.SetDirty(prop.serializedObject.targetObject);      
+            }
+
+            switch (prop.propertyType)
+            {
+                case SerializedPropertyType.ObjectReference:
+                    UnityObjectEditor(prop.objectReferenceValue);
+                    break;
+            }
+
+        }
+
+        private void UnityObjectEditor(Object target)
+        {
+            if (!target) return;
+
+            Editor.CreateCachedEditor(target, null, ref customEditor);
+            if (!customEditor) return;
+
+            customEditor.OnInspectorGUI();
         }
     }
 }
